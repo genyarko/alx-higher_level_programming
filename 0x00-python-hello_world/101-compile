@@ -1,0 +1,21 @@
+#!/bin/bash
+# get the Python file name
+PYFILE="$1"
+# check if the variable is set
+if [ -z "$PYFILE" ]; then
+echo "The Python file name is not set!"
+exit 1
+fi
+# compile the Python script file
+echo "Compiling $PYFILE..."
+python -m compileall -b "$PYFILE"
+# check if the compilation was successful
+if [ $? -ne 0 ]; then
+echo "Compilation failed!"
+exit 1
+fi
+# rename the output file
+echo "Renaming the output file to $PYFILEc..."
+mv "$PYFILE.pyc" "$PYFILEc"
+echo "Compilation successful!"
+exit 0
