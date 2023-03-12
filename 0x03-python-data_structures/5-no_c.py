@@ -6,4 +6,4 @@ def no_c(my_string):
             new_string += char
     return new_string
 
-print(no_c("My name is Chris"))
+
