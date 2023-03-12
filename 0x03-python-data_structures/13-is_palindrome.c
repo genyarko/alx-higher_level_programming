@@ -1,58 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "lists.h"
 
-typedef struct listint_s
-{
-    int n;
-    struct listint_s *next;
-} listint_t;
-
+/**
+ * is_palindrome - checks if a singly linked list is a palindrome
+ * @head: pointer to head of list
+ * Return: 0 if it is not a palindrome, 1 if it is a palindrome
+ */
 int is_palindrome(listint_t **head)
 {
-    int count = 0;
-    listint_t *current = *head;
-    listint_t *temp = *head;
+	listint_t *temp = *head;
+	int i = 0, j = 0, k = 0, l = 0, m = 0, n = 0;
+	int *arr;
 
-    // Count the number of nodes in the list
-    while (current != NULL)
-    {
-        current = current->next;
-        count++;
-    }
-
-    // If the list has no elements, it is a palindrome
-    if (count == 0)
-        return 1;
-
-    // Set current to the head of the list
-    current = *head;
-    int mid = count / 2;
-    int i;
-
-    // Iterate up to the middle of the list
-    for (i = 0; i < mid; i++)
-        current = current->next;
-
-    // Reverse the second half of the list
-    listint_t *prev = NULL;
-    listint_t *next = NULL;
-    while (current != NULL)
-    {
-        next = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
-    }
-
-    // Compare the first and second half of the list
-    while (prev != NULL)
-    {
-        if (temp->n != prev->n)
-            return 0;
-
-        prev = prev->next;
-        temp = temp->next;
-    }
-
-    return 1;
+	if (head == NULL || *head == NULL)
+		return (1);
+	while (temp != NULL)
+	{
+		temp = temp->next;
+		i++;
+	}
+	arr = malloc(sizeof(int) * i);
+	if (arr == NULL)
+		return (0);
+	temp = *head;
+	while (temp != NULL)
+	{
+		arr[j] = temp->n;
+		temp = temp->next;
+		j++;
+	}
+	for (k = 0; k < i; k++)
+	{
+		if (arr[k] != arr[i - 1 - k])
+		{
+			free(arr);
+			return (0);
+		}
+	}
+	free(arr);
+	return (1);
 }
