@@ -4,40 +4,43 @@
 
 /**
  * is_palindrome - checks if a singly linked list is a palindrome
- * @head: pointer to head of list
+ * @head: pointer to the first node of the list
+ *
  * Return: 0 if it is not a palindrome, 1 if it is a palindrome
  */
 int is_palindrome(listint_t **head)
 {
-	listint_t *temp = *head;
-	int i = 0, j = 0, k = 0, l = 0, m = 0, n = 0;
-	int *arr;
+    listint_t *fast = *head;
+    listint_t *slow = *head;
+    listint_t *prev = NULL;
+    int result = 1;
 
-	if (head == NULL || *head == NULL)
-		return (1);
-	while (temp != NULL)
-	{
-		temp = temp->next;
-		i++;
-	}
-	arr = malloc(sizeof(int) * i);
-	if (arr == NULL)
-		return (0);
-	temp = *head;
-	while (temp != NULL)
-	{
-		arr[j] = temp->n;
-		temp = temp->next;
-		j++;
-	}
-	for (k = 0; k < i; k++)
-	{
-		if (arr[k] != arr[i - 1 - k])
-		{
-			free(arr);
-			return (0);
-		}
-	}
-	free(arr);
-	return (1);
+    if (*head == NULL)
+        return (1);
+
+    while (fast != NULL && fast->next != NULL)
+    {
+        fast = fast->next->next;
+
+        listint_t *next = slow->next;
+        slow->next = prev;
+        prev = slow;
+        slow = next;
+    }
+
+    if (fast != NULL)
+        slow = slow->next;
+
+    while (slow != NULL)
+    {
+        if (prev->n != slow->n)
+        {
+            result = 0;
+            break;
+        }
+        slow = slow->next;
+        prev = prev->next;
+    }
+
+    return (result);
 }
