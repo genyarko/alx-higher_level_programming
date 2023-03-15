@@ -1,7 +1,6 @@
 #include "/usr/include/python3.4/Python.h"
 #include <stdio.h>
 
-
 void print_python_bytes(PyObject *p)
 {
 	if (!p || !PyBytes_Check(p))
@@ -30,6 +29,7 @@ void print_python_bytes(PyObject *p)
 		fprintf(stdout, "\n");
 	}
 }
+
 void print_python_list(PyObject *p)
 {
 	if (!p || !PyList_Check(p))
