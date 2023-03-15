@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
-def uniq_add(my_list=[]): 
-    result = 0
-    for i in my_list: 
-        if i not in my_list[:my_list.index(i)]:  
-            result += i
+def uniq_add(my_list=[]):
+    result = 0 
+    seen = set() 
+    for num in my_list: 
+        if num not in seen: 
+            seen.add(num) 
+            result += num 
     return result
