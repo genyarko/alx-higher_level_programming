@@ -1,44 +1,42 @@
 #include "/usr/include/python3.4/Python.h"
 #include <stdio.h>
 
+
 void print_python_bytes(PyObject *p)
 {
-    if (!p || !PyBytes_Check(p))
+    int i;
+    PyBytesObject *bytes;
+    if (!PyBytes_Check(p))
     {
-        printf("Error: Invalid PyObject passed to print_python_bytes\n");
+        printf("Invalid Bytes Object\n");
         return;
     }
-    int size = (int)PyBytes_Size(p);
+    bytes = (PyBytesObject *)p;
     printf("[*] Python bytes info\n");
-    printf("[*] Size of the Python bytes = %d\n", size);
-    printf("[*] Trying string: %s\n", PyBytes_AsString(p));
-    if (size > 10)
+    printf("[*] Size of the Python Bytes = %ld\n", PyBytes_Size(p));
+    printf("[*] Trying string: %s\n", bytes->ob_sval);
+    printf("[*] First %d bytes: ", (int)PyBytes_Size(p) > 10 ? 10 : (int)PyBytes_Size(p));
+    for (i = 0; i < (int)PyBytes_Size(p) && i < 10; i++)
     {
-        printf("[*] First 10 bytes: ");
-        int i;
-        for (i = 0; i < 10; i++)
-            printf("%02x ", (unsigned char)PyBytes_AsString(p)[i]);
-        printf("\n");
+        printf("%02x ", (unsigned char)bytes->ob_sval[i]);
     }
-    else
-        printf("[*] First %d bytes: %s\n", size, PyBytes_AsString(p));
+    printf("\n");
 }
-
-
 void print_python_list(PyObject *p)
 {
-    if (!p || !PyList_Check(p))
+    int i;
+    PyListObject *list;
+    if (!PyList_Check(p))
     {
-        printf("Error: Invalid PyObject passed to print_python_list\n");
+        printf("Invalid List Object\n");
         return;
     }
-    int size = (int)PyList_Size(p);
+    list = (PyListObject *)p;
     printf("[*] Python list info\n");
-    printf("[*] Size of the Python List = %d\n", size);
-    printf("[*] Allocated = %ld\n", ((PyListObject*)p)->allocated);
-    int i;
-    for (i = 0; i < size; i++)
+    printf("[*] Size of the Python List = %ld\n", PyList_Size(p));
+    printf("[*] Allocated = %ld\n", list->allocated);
+    for (i = 0; i < PyList_Size(p); i++)
     {
-        printf("Element %d: %s\n", i, Py_TYPE(PyList_GetItem(p, i))->tp_name);
+        printf("Element %d: %s\n", i, Py_TYPE(list->ob_item[i])->tp_name);
     }
 }
