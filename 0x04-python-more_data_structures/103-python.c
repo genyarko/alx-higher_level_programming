@@ -1,4 +1,3 @@
-#include "/usr/include/python3.4/Python.h"
 #include <stdio.h>
 
 void print_python_bytes(PyObject *p)
