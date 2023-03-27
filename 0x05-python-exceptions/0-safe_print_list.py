@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 def safe_print_list(my_list=[], x=0):
-    elements_printed = 0
-    for element in range(x):
-    try:
-    print(my_list[element], end="")
-            elements_printed += 1
-        break
-    except:
-        print()
-    return elements_printed
+  elements_printed = 0
+  try:
+    for i in range(x):
+      print(my_list[i], end=" ")
+      elements_printed += 1
+  except:
+    pass
+  print()
+  return elements_printed
 
