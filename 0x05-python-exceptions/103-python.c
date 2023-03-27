@@ -5,42 +5,51 @@ void print_python_bytes(PyObject *p);
 void print_python_float(PyObject *p);
 
 /**
- * print_python_list - Prints basic info about Python lists.
- * @p: A PyObject list object.
+ * print_python_list - prints some basic info about Python lists
+ * @p: PyObject
+ *
+ * Return: void
  */
 void print_python_list(PyObject *p)
 {
-	int size, i;
-	PyListObject *list;
-	PyObject *element;
-	PyBytesObject *byte;
+	Py_ssize_t size, alloc, i;
+	const char *type;
+	PyListObject *list = (PyListObject *)p;
+	PyVarObject *var = (PyVarObject *)p;
 
-	setbuf(stdout, NULL);
-	if (!PyList_Check(p))
+	size = var->ob_size;
+	alloc = list->allocated;
+
+	fflush(stdout);
+
+	printf("[*] Python list info\n");
+	if (strcmp(p->ob_type->tp_name, "list") != 0)
 	{
-		printf("Invalid List Object\n");
+		printf("  [ERROR] Invalid List Object\n");
 		return;
 	}
-	list = (PyListObject *)p;
-	size = Py_SIZE(list);
-	printf("[*] Size of the Python List = %d\n", size);
-	printf("[*] Allocated = %lu\n", list->allocated);
+
+	printf("[*] Size of the Python List = %ld\n", size);
+	printf("[*] Allocated = %ld\n", alloc);
+
 	for (i = 0; i < size; i++)
 	{
-		element = list->ob_item[i];
-		printf("Element %d: %s\n", i, element->ob_type->tp_name);
-		if (PyBytes_Check(element))
-		{
-			byte = (PyBytesObject *)element;
-			printf("%d: %s\n", i, PyBytes_AsString(byte));
-		}
+		type = list->ob_item[i]->ob_type->tp_name;
+		printf("Element %ld: %s\n", i, type);
+		if (strcmp(type, "bytes") == 0)
+			print_python_bytes(list->ob_item[i]);
+		else if (strcmp(type, "float") == 0)
+			print_python_float(list->ob_item[i]);
 	}
-	fflush(stdout);
 }
 
 /**
- * print_python_bytes - Prints basic info about Python byte objects.
- * @p: A PyObject byte object.
+ * print_python_bytes - prints information about a Python Bytes object
+ * @p: pointer to a Python Bytes object
+ *
+ * Description: This function prints the size of the Python Bytes object
+ * pointed to by @p, tries to print the object as a string, and prints
+ * the first 10 bytes of the object.
  */
 void print_python_bytes(PyObject *p)
 {
@@ -75,9 +84,15 @@ void print_python_bytes(PyObject *p)
 	}
 }
 
-/**
- * print_python_float - Prints basic info about Python float objects.
- * @p: A PyObject float object.
+/*
+ * print_python_float - prints basic info about Python float object
+ * @p: PyObject pointer to a Python float object
+ *
+ * Description: This prints general information about a Python float object
+ * such as its address in memory, its size, and its value. 
+ * If p is not a valid float object, an error message is printed.
+ *
+ * Return: void
  */
 void print_python_float(PyObject *p)
 {
