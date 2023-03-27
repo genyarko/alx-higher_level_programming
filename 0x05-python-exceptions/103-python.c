@@ -10,35 +10,32 @@ void print_python_float(PyObject *p);
  */
 void print_python_list(PyObject *p)
 {
-	Py_ssize_t size, alloc, i;
-	const char *type;
-	PyListObject *list = (PyListObject *)p;
-	PyVarObject *var = (PyVarObject *)p;
+	int size, i;
+	PyListObject *list;
+	PyObject *element;
+	PyBytesObject *byte;
 
-	size = var->ob_size;
-	alloc = list->allocated;
-
-	fflush(stdout);
-
-	printf("[*] Python list info\n");
-	if (strcmp(p->ob_type->tp_name, "list") != 0)
+	setbuf(stdout, NULL);
+	if (!PyList_Check(p))
 	{
-		printf("  [ERROR] Invalid List Object\n");
+		printf("Invalid List Object\n");
 		return;
 	}
-
-	printf("[*] Size of the Python List = %ld\n", size);
-	printf("[*] Allocated = %ld\n", alloc);
-
+	list = (PyListObject *)p;
+	size = Py_SIZE(list);
+	printf("[*] Size of the Python List = %d\n", size);
+	printf("[*] Allocated = %lu\n", list->allocated);
 	for (i = 0; i < size; i++)
 	{
-		type = list->ob_item[i]->ob_type->tp_name;
-		printf("Element %ld: %s\n", i, type);
-		if (strcmp(type, "bytes") == 0)
-			print_python_bytes(list->ob_item[i]);
-		else if (strcmp(type, "float") == 0)
-			print_python_float(list->ob_item[i]);
+		element = list->ob_item[i];
+		printf("Element %d: %s\n", i, element->ob_type->tp_name);
+		if (PyBytes_Check(element))
+		{
+			byte = (PyBytesObject *)element;
+			printf("%d: %s\n", i, PyBytes_AsString(byte));
+		}
 	}
+	fflush(stdout);
 }
 
 /**
