@@ -1,80 +1,98 @@
 #include <Python.h>
-/**
- * print_python_list - Function to print info about Python list objects
- * @p: PyObject pointer
+void print_python_list(PyObject *p);
+void print_python_bytes(PyObject *p);
+void print_python_float(PyObject *p);
+/*
+ * print_python_list - print basic info about Python lists
+ * @p: Pointer to PyObject object
  *
- * Description: This function takes a PyObject pointer and prints information
- * about the Python list object.
+ * Description: This function prints basic info about Python lists,
+ * including the type, size, and first and last items of the list.
  *
- * Return: void
+ * Return: Void
  */
 void print_python_list(PyObject *p)
 {
-	/* Check if p is a valid PyListObject */
+	int i;
+	PyListObject *list;
+	PyObject *first;
+	PyObject *last;
+
+	setbuf(stdout, NULL);
 	if (!PyList_Check(p))
 	{
-		printf("Error: Object is not a Python list\n");
+		printf("Invalid List Object\n");
 		return;
 	}
-
-	/* Print info about list */
+	list = (PyListObject *)p;
 	printf("[*] Python list info\n");
-	printf("[*] Size of the Python List = %ld\n", PyList_Size(p));
-	printf("[*] Allocated = %ld\n", ((PyListObject *)p)->allocated);
-
-	/* Flush stdout */
-	fflush(stdout);
+	printf("[*] Size of the Python List = %lu\n", list->ob_size);
+	printf("[*] Allocated = %lu\n", list->allocated);
+	if (list->ob_size > 0)
+	{
+		first = list->ob_item[0];
+		printf("[*] First item of the List at address %p: %s\n", list->ob_item[0],
+		       first->ob_type->tp_name);
+		last = list->ob_item[list->ob_size - 1];
+		printf("[*] Last item of the List at address %p: %s\n", list->ob_item[list->ob_size - 1],
+		       last->ob_type->tp_name);
+	}
 }
 
-/**
- * print_python_bytes - Function to print info about Python bytes objects
- * @p: PyObject pointer
+/*
+ * print_python_bytes - print basic info about Python bytes
+ * @p: Pointer to PyObject object
  *
- * Description: This function takes a PyObject pointer and prints information
- * about the Python bytes object.
+ * Description: This function prints basic info about Python bytes,
+ * including the type, size, and first 10 bytes of the bytes object.
  *
- * Return: void
+ * Return: Void
  */
 void print_python_bytes(PyObject *p)
 {
-	/* Check if p is a valid PyBytesObject */
+	int i;
+	PyBytesObject *bytes;
+	char *str;
+
+	setbuf(stdout, NULL);
 	if (!PyBytes_Check(p))
 	{
-		printf("Error: Object is not a Python bytes\n");
+		printf("Invalid Bytes Object\n");
 		return;
 	}
-
-	/* Print info about bytes */
-	printf("[*] Python bytes info\n");
-	printf("[*] Size of the Python Bytes = %ld\n", PyBytes_Size(p));
-	printf("[*] First 10 bytes: %10.10s\n", PyBytes_AsString(p));
-
-	/* Flush stdout */
-	fflush(stdout);
+	bytes = (PyBytesObject *)p;
+	str = bytes->ob_sval;
+	printf("[.] bytes object info\n");
+	printf("  size: %ld\n", bytes->ob_base.ob_base.ob_size);
+	printf("  trying string: %s\n", str);
+	printf("  first %d bytes:", (int)bytes->ob_base.ob_base.ob_size);
+	for (i = 0; i < (int)bytes->ob_base.ob_base.ob_size && i < 10; i++)
+		printf(" %02x", str[i] & 0xff);
+	printf("\n");
 }
 
-/**
- * print_python_float - Function to print info about Python float objects
- * @p: PyObject pointer
+/*
+ * print_python_float - print basic info about Python floats
+ * @p: Pointer to PyObject object
  *
- * Description: This function takes a PyObject pointer and prints information
- * about the Python float object.
+ * Description: This function prints basic info about Python floats,
+ * including the type and value of the float object.
  *
- * Return: void
+ * Return: Void
  */
 void print_python_float(PyObject *p)
 {
-	/* Check if p is a valid PyFloatObject */
+	PyFloatObject *float;
+	double val;
+
+	setbuf(stdout, NULL);
 	if (!PyFloat_Check(p))
 	{
-		printf("Error: Object is not a Python float\n");
+		printf("Invalid Float Object\n");
 		return;
 	}
-
-	/* Print info about float */
-	printf("[*] Python float info\n");
-	printf("[*] Value: %f\n", PyFloat_AsDouble(p));
-
-	/* Flush stdout */
-	fflush(stdout);
+	float = (PyFloatObject *)p;
+	val = float->ob_fval;
+	printf("[.] float object info\n");
+	printf("  value: %.16g\n", val);
 }
