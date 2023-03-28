@@ -1,21 +1,10 @@
 #!/usr/bin/python3
 
+"""Define a class Square."""
+
+
 class Square:
-     """
-    A class used to represent a square
-    Attributes
-    ----------
-    size : int
-        The side length of the square
-    position : tuple
-        The position of the top-left corner of the square
-    Methods
-    -------
-    area()
-        Returns the area of the square
-    my_print()
-        Prints the square in stdout
-    """
+    """Represent a square."""
 
     def __init__(self, size=0, position=(0, 0)):
         """Initialize a new square.
