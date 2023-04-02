@@ -1,3 +1,9 @@
+The ``4-print_square`` module
+======================
+
+Using ``print_square``
+-------------------
+
 Importing the function from the module:
 	>>> print_square = __import__("4-print_square").print_square
 
@@ -11,33 +17,71 @@ Checking for function docstring:
          >>> len(f) > 1
          True
 
-def test_print_square():
-    # Test with size = 0
-    assert print_square(0) == None
+Checking for no args:
+	 >>> print_square()
+	 Traceback (most recent call last):
+	 ...
+	 TypeError: print_square() missing 1 required positional argument: 'size'
 
-    # Test with size = 1
-    assert print_square(1) == print("#")
+Checking for too many args
+	 >>> print_square(1, 2)
+	 Traceback (most recent call last):
+	 ...
+	 TypeError: print_square() takes 1 positional argument but 2 were given
 
-    # Test with size = 2
-    assert print_square(2) == print("##\n##")
+Checking for passing None:
+	 >>> print_square(None)
+	 Traceback (most recent call last):
+         ...
+         TypeError: size must be an integer
 
-    # Test with size = 5
-    assert print_square(5) == print("#####\n#####\n#####\n#####\n#####")
+Checking for positive ints:
+	 >>> print_square(4)
+	 ####
+	 ####
+	 ####
+	 ####
+	 >>> print_square(10)
+	 ##########
+	 ##########
+	 ##########
+	 ##########
+	 ##########
+	 ##########
+	 ##########
+	 ##########
+	 ##########
+	 ##########
+	 >>> print_square(0)
+	 >>> print_square(1)
+	 #
 
-    # Test with size = -1
-    try:
-        print_square(-1)
-    except ValueError as e:
-        assert str(e) == "size must be >= 0"
+Checking for negative ints:
+	 >>> print_square(-1)
+	 Traceback (most recent call last):
+         ...
+         ValueError: size must be >= 0
 
-    # Test with size = 3.5
-    try:
-        print_square(3.5)
-    except TypeError as e:
-        assert str(e) == "size must be an integer"
+Checking for non-number types:
+	 >>> print_square((1,))
+	 Traceback (most recent call last):
+         ...
+         TypeError: size must be an integer
+	 >>> print_square("3")
+	 Traceback (most recent call last):
+         ...
+         TypeError: size must be an integer
+	 >>> print_square(True)
+	 Traceback (most recent call last):
+         ...
+         TypeError: size must be an integer
 
-    # Test with size = "foo"
-    try:
-        print_square("foo")
-    except TypeError as e:
-        assert str(e) == "size must be an integer"
+Checking for non-int number types:
+	 >>> print_square(1.0)
+	 Traceback (most recent call last):
+         ...
+         TypeError: size must be an integer
+	 >>> print_square(-5.5)
+	 Traceback (most recent call last):
+         ...
+         TypeError: size must be an integer
