@@ -1,0 +1,31 @@
+Importing the function from the module:
+	>>> text_indentation = __import__("5-text_indentation").text_indentation
+
+Checking for module docstring:
+	 >>> m = __import__("5-text_indentation").__doc__
+	 >>> len(m) > 1
+	 True
+
+Checking for function docstring:
+	 >>> f = __import__("5-text_indentation").text_indentation.__doc__
+         >>> len(f) > 1
+         True
+
+def test_text_indentation():
+    # Test valid input
+    text_indentation("Hello. How are you? Good, thanks. And you?")
+    text_indentation("This is a sentence with\na newline.")
+    text_indentation("This is a sentence with spaces at the beginning and end.  ")
+    
+    # Test invalid input
+    try:
+        text_indentation(123)
+        assert False, "Expected TypeError was not raised."
+    except TypeError:
+        pass
+    
+    try:
+        text_indentation("This is a sentence with no punctuation")
+        assert False, "Expected output was not generated."
+    except AssertionError:
+        pass
