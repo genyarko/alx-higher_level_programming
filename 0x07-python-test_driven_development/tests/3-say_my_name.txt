@@ -1,0 +1,42 @@
+The ``3-say_my_name`` module
+======================
+
+Using ``say_my_name``
+-------------------
+
+Importing the function from the module:
+	>>> say_my_name = __import__("3-say_my_name").say_my_name
+
+Checking for module docstring:
+	 >>> m = __import__("3-say_my_name").__doc__
+	 >>> len(m) > 1
+	 True
+
+Checking for function docstring:
+	 >>> f = __import__("3-say_my_name").say_my_name.__doc__
+         >>> len(f) > 1
+         True
+def test_say_my_name():
+    # Test case 1: Valid input
+    say_my_name("John", "Doe")
+    # Expected output: "My name is John Doe"
+    
+    # Test case 2: Missing last name
+    say_my_name("Jane")
+    # Expected output: "My name is Jane "
+    
+    # Test case 3: Invalid first name
+    try:
+        say_my_name(123, "Smith")
+    except TypeError as e:
+        assert str(e) == "first_name must be a string"
+    else:
+        assert False, "Exception not raised"
+    
+    # Test case 4: Invalid last name
+    try:
+        say_my_name("Alice", 456)
+    except TypeError as e:
+        assert str(e) == "last_name must be a string"
+    else:
+        assert False, "Exception not raised"
