@@ -4,6 +4,7 @@ nqueens backtracking program to print the coordinates of n queens
 on an nxn grid such that they are all in non-attacking positions
 """
 
+
 from sys import argv
 
 if __name__ == "__main__":
@@ -11,7 +12,7 @@ if __name__ == "__main__":
     if len(argv) != 2:
         print("Usage: nqueens N")
         exit(1)
-    if not argv[1].isdigit():
+    if argv[1].isdigit() is False:
         print("N must be a number")
         exit(1)
     n = int(argv[1])
@@ -32,7 +33,7 @@ if __name__ == "__main__":
 
     def reject(x, y):
         """determines whether or not to reject the solution"""
-        if already_exists(y):
+        if (already_exists(y)):
             return False
         i = 0
         while(i < x):
@@ -52,8 +53,8 @@ if __name__ == "__main__":
             clear_a(x)
             if reject(x, y):
                 a[x][1] = y
-                if x == n - 1:  # accepts the solution
-                    print(*(x[1]+1 for x in a), sep=' ')
+                if (x == n - 1):  # accepts the solution
+                    print(a)
                 else:
                     nqueens(x + 1)  # moves on to next x value to continue
 
