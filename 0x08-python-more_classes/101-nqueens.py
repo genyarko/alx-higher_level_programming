@@ -4,7 +4,7 @@ nqueens backtracking program to print the coordinates of n queens
 on an nxn grid such that they are all in non-attacking positions
 """
 
-import sys
+from sys import argv
 
 def nqueens(N):
     # Check that N is an integer greater than or equal to 4
