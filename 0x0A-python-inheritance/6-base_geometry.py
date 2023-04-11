@@ -2,8 +2,10 @@
 """
 Contains the class BaseGeometry
 """
+
+
 class BaseGeometry:
-"""A class"""
+    """A class with public attribute area"""
     def area(self):
-    """Raises an exception"""
+        """raises an exception when called"""
         raise Exception("area() is not implemented")
