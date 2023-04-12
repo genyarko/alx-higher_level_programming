@@ -5,37 +5,48 @@ reads stdin line by line and computes metrics
 
 import sys
 
-file_size = 0
-status_count = {"200": 0, "301": 0, "400": 0, "401": 0,
-                "403": 0, "404": 0, "405": 0, "500": 0}
-line_count = 0
+# initialize variables to store metrics
+total_file_size = 0
+status_code_counts = {
+    '200': 0,
+    '301': 0,
+    '400': 0,
+    '401': 0,
+    '403': 0,
+    '404': 0,
+    '405': 0,
+    '500': 0,
+}
 
 try:
-    for line in sys.stdin:
-        tokens = line.split()
+    # loop through stdin line by line
+    for i, line in enumerate(sys.stdin):
+        # parse the line into its components
+        parts = line.split()
+        ip_address = parts[0]
+        date = parts[2][1:]
+        status_code = parts[5]
+        file_size = int(parts[6])
 
-        if len(tokens) < 5:
-            continue
+        # update metrics
+        total_file_size += file_size
+        status_code_counts[status_code] += 1
 
-        status_code = tokens[3]
-        file_size += int(tokens[4])
-        status_count[status_code] += 1
-        line_count += 1
+        # print metrics every 10 lines
+        if (i+1) % 10 == 0:
+            print(f'Total file size: {total_file_size}')
 
-        if line_count % 10 == 0:
-            print("Total file size: File size: {:d}".format(file_size))
-            for code in sorted(status_count.keys()):
-                if status_count[code] > 0:
-                    print("{:s}: {:d}".format(code, status_count[code]))
+            for code, count in sorted(status_code_counts.items()):
+                if count > 0:
+                    print(f'{code}: {count}')
 
-    print("Total file size: File size: {:d}".format(file_size))
-    for code in sorted(status_count.keys()):
-        if status_count[code] > 0:
-            print("{:s}: {:d}".format(code, status_count[code]))
+            print()
 
 except KeyboardInterrupt:
-    print("Total file size: File size: {:d}".format(file_size))
-    for code in sorted(status_count.keys()):
-        if status_count[code] > 0:
-            print("{:s}: {:d}".format(code, status_count[code]))
+    # print final metrics on keyboard interrupt
+    print(f'Total file size: {total_file_size}')
+
+    for code, count in sorted(status_code_counts.items()):
+        if count > 0:
+            print(f'{code}: {count}')
 
