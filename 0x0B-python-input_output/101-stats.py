@@ -3,37 +3,45 @@
 reads stdin line by line and computes metrics
 """
 
+
 import sys
 
-STATUS_CODES = ("200", "301", "400", "401", "403", "404", "405", "500")
-
-def print_stats(file_size, status_tally):
-    print("File size: {:d}".format(file_size))
-    for key, value in sorted(status_tally.items()):
-        if value:
-            print("{:s}: {:d}".format(key, value))
-
+status_tally = [0] * 8
 file_size = 0
-status_tally = {code: 0 for code in STATUS_CODES}
-line_count = 0
+i = 0
 
 try:
     for line in sys.stdin:
-        line_count += 1
-        tokens = line.split()
-        if len(tokens) >= 7:
-            status_code = tokens[-2]
-            if status_code in status_tally:
-                status_tally[status_code] += 1
-            try:
-                file_size += int(tokens[-1])
-            except ValueError:
-                pass
+        try:
+            _, _, _, status, size = line.rsplit(maxsplit=4)
+        except ValueError:
+            continue
 
-        if line_count % 10 == 0:
-            print_stats(file_size, status_tally)
+        try:
+            size = int(size)
+        except ValueError:
+            continue
 
-    print_stats(file_size, status_tally)
+        file_size += size
+
+        status_code = int(status[0] + '00')
+        if status_code in [200, 300, 400, 500]:
+            status_tally[(status_code // 100) - 2] += 1
+
+        i += 1
+        if i % 10 == 0:
+            print(f"File size: {file_size}")
+            for j in range(len(status_tally)):
+                if status_tally[j] > 0:
+                    print(f"{(j+2)*100}: {status_tally[j]}")
+
+    print(f"File size: {file_size}")
+    for j in range(len(status_tally)):
+        if status_tally[j] > 0:
+            print(f"{(j+2)*100}: {status_tally[j]}")
 
 except KeyboardInterrupt:
-    print_stats(file_size, status_tally)
+    print(f"\nFile size: {file_size}")
+    for j in range(len(status_tally)):
+        if status_tally[j] > 0:
+            print(f"{(j+2)*100}: {status_tally[j]}")
