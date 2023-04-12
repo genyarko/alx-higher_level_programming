@@ -3,39 +3,41 @@
 reads stdin line by line and computes metrics
 """
 
-
 import sys
+from collections import defaultdict
 
-file_size = 0
-status_count = {"200": 0, "301": 0, "400": 0, "401": 0,
-                "403": 0, "404": 0, "405": 0, "500": 0}
+# initialize the required variables
+total_size = 0
+status_counts = defaultdict(int)
 line_count = 0
 
-try:
-    for line in sys.stdin:
-        tokens = line.split()
-
-        if len(tokens) < 5:
+# process the input lines
+for line in sys.stdin:
+    try:
+        # parse the line using the provided format
+        ip, _, date, request, status, size = line.split(' ')
+        if request != 'GET /projects/260 HTTP/1.1':
             continue
-
-        status_code = tokens[3]
-        file_size += int(tokens[4])
-        status_count[status_code] += 1
+        status = int(status)
+        size = int(size)
+        
+        # update the variables
+        total_size += size
+        status_counts[status] += 1
         line_count += 1
-
+        
+        # print the statistics after every 10 lines
         if line_count % 10 == 0:
-            print("Total file size: File size: {:d}".format(file_size))
-            for code in sorted(status_count.keys()):
-                if status_count[code] > 0:
-                    print("{:s}: {:d}".format(code, status_count[code]))
+            print('Total file size:', total_size)
+            for status_code in sorted(status_counts.keys()):
+                print(status_code, ':', status_counts[status_code])
+                
+    except KeyboardInterrupt:
+        # handle keyboard interruption (CTRL + C)
+        print('Total file size:', total_size)
+        for status_code in sorted(status_counts.keys()):
+            print(status_code, ':', status_counts[status_code])
+        break
 
-    print("Total file size: File size: {:d}".format(file_size))
-    for code in sorted(status_count.keys()):
-        if status_count[code] > 0:
-            print("{:s}: {:d}".format(code, status_count[code]))
 
-except KeyboardInterrupt:
-    print("Total file size: File size: {:d}".format(file_size))
-    for code in sorted(status_count.keys()):
-        if status_count[code] > 0:
-            print("{:s}: {:d}".format(code, status_count[code]))
+
