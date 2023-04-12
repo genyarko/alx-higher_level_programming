@@ -1,28 +1,40 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/python3
+"""
+reads stdin line by line and computes metrics
+"""
 import sys
 
-def print_metrics(total_file_size, status_codes):
-    print("File size: {}".format(total_file_size))
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print("{}: {}".format(code, status_codes[code]))
-
-status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-total_file_size = 0
-count = 0
-
+file_size = 0
+status_tally = {"200": 0, "301": 0, "400": 0, "401": 0,
+                "403": 0, "404": 0, "405": 0, "500": 0}
+i = 0
 try:
     for line in sys.stdin:
-        count += 1
-        split_line = line.split()
-        status_code = int(split_line[-2])
-        file_size = int(split_line[-1])
-        total_file_size += file_size
-        if status_code in status_codes:
-            status_codes[status_code] += 1
-        if count % 10 == 0:
-            print_metrics(total_file_size, status_codes)
+        tokens = line.split()
+        if len(tokens) >= 2:
+            a = i
+            if tokens[-2] in status_tally:
+                status_tally[tokens[-2]] += 1
+                i += 1
+            try:
+                file_size += int(tokens[-1])
+                if a == i:
+                    i += 1
+            except FileNotFoundError:
+                if a == i:
+                    continue
+        if i % 10 == 0:
+            print("File size: {:d}".format(file_size))
+            for key, value in sorted(status_tally.items()):
+                if value:
+                    print("{:s}: {:d}".format(key, value))
+    print("File size: {:d}".format(file_size))
+    for key, value in sorted(status_tally.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value))
+
 except KeyboardInterrupt:
-    print_metrics(total_file_size, status_codes)
-    sys.exit(0)
+    print("File size: {:d}".format(file_size))
+    for key, value in sorted(status_tally.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value))
