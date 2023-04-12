@@ -5,29 +5,28 @@ reads stdin line by line and computes metrics
 
 
 import sys
-from collections import defaultdict
 
 file_size = 0
-status_tally = defaultdict(int)
+status_tally = {"200": 0, "301": 0, "400": 0, "401": 0,
+                "403": 0, "404": 0, "405": 0, "500": 0}
+i = 0
 
 try:
-    for i, line in enumerate(sys.stdin, 1):
+    for line in sys.stdin:
         tokens = line.split()
-        if len(tokens) >= 2 and tokens[-2] in status_tally:
+        if len(tokens) >= 5:
             status_tally[tokens[-2]] += 1
             file_size += int(tokens[-1])
-        if i % 10 == 0:
-            print(f"File size: {file_size}")
-            for key in sorted(status_tally.keys()):
-                if status_tally[key]:
-                    print(f"{key}: {status_tally[key]}")
-    print(f"File size: {file_size}")
-    for key in sorted(status_tally.keys()):
-        if status_tally[key]:
-            print(f"{key}: {status_tally[key]}")
+            i += 1
+
+    print("File size: {:d}".format(file_size))
+    for key, value in sorted(status_tally.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value))
 
 except KeyboardInterrupt:
-    print(f"File size: {file_size}")
-    for key in sorted(status_tally.keys()):
-        if status_tally[key]:
-            print(f"{key}: {status_tally[key]}")
+    print("File size: {:d}".format(file_size))
+    for key, value in sorted(status_tally.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value)))
+
