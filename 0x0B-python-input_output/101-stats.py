@@ -2,32 +2,29 @@
 """
 reads stdin line by line and computes metrics
 """
+
 import sys
 from collections import defaultdict
 
-def print_stats(total_size, status_codes):
-    print(f"Total file size: {total_size}")
-    for code in sorted(status_codes.keys()):
-        print(f"{code}: {status_codes[code]}")
+def print_stats(file_size, status_tally):
+    print("File size: {:d}".format(file_size))
+    for key, value in sorted(status_tally.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value))
 
-def parse_line(line):
-    parts = line.split()
-    ip_address = parts[0]
-    status_code = int(parts[3])
-    file_size = int(parts[4])
-    return ip_address, status_code, file_size
-
-total_size = 0
-status_codes = defaultdict(int)
-count = 0
-
+file_size = 0
+status_tally = defaultdict(int)
 try:
-    for line in sys.stdin:
-        ip_address, status_code, file_size = parse_line(line)
-        total_size += file_size
-        status_codes[status_code] += 1
-        count += 1
-        if count % 10 == 0:
-            print_stats(total_size, status_codes)
+    for i, line in enumerate(sys.stdin, start=1):
+        tokens = line.split()
+        if len(tokens) >= 2 and tokens[-2] in status_tally:
+            status_tally[tokens[-2]] += 1
+        try:
+            file_size += int(tokens[-1])
+        except (IndexError, ValueError):
+            pass
+        if i % 10 == 0:
+            print_stats(file_size, status_tally)
+    print_stats(file_size, status_tally)
 except KeyboardInterrupt:
-    print_stats(total_size, status_codes)
+    print_stats(file_size, status_tally)
