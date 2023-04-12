@@ -5,29 +5,33 @@ reads stdin line by line and computes metrics
 
 
 import sys
-from collections import defaultdict
 
 file_size = 0
-status_tally = defaultdict(int)
+status_tally = [0] * 8
+i = 0
 
 try:
-    for i, line in enumerate(sys.stdin, 1):
+    for line in sys.stdin:
         tokens = line.split()
-        if len(tokens) >= 2 and tokens[-2] in status_tally:
-            status_tally[tokens[-2]] += 1
-            file_size += int(tokens[-1])
+        if len(tokens) >= 2:
+            if tokens[-2].isdigit():
+                status_code = int(tokens[-2])
+                if status_code >= 200 and status_code <= 500:
+                    status_tally[status_code // 100 - 2] += 1
+                    i += 1
+            if tokens[-1].isdigit():
+                file_size += int(tokens[-1])
         if i % 10 == 0:
             print(f"File size: {file_size}")
-            for key in sorted(status_tally.keys()):
-                if status_tally[key]:
-                    print(f"{key}: {status_tally[key]}")
+            for code, count in enumerate(status_tally):
+                if count:
+                    print(f"{code+200}: {count}")
     print(f"File size: {file_size}")
-    for key in sorted(status_tally.keys()):
-        if status_tally[key]:
-            print(f"{key}: {status_tally[key]}")
-
+    for code, count in enumerate(status_tally):
+        if count:
+            print(f"{code+200}: {count}")
 except KeyboardInterrupt:
     print(f"File size: {file_size}")
-    for key in sorted(status_tally.keys()):
-        if status_tally[key]:
-            print(f"{key}: {status_tally[key]}")
+    for code, count in enumerate(status_tally):
+        if count:
+            print(f"{code+200}: {count}")
