@@ -5,28 +5,33 @@ reads stdin line by line and computes metrics
 
 
 import sys
+from collections import defaultdict
 
-file_size = 0
-status_tally = {"200": 0, "301": 0, "400": 0, "401": 0,
-                "403": 0, "404": 0, "405": 0, "500": 0}
-i = 0
+def print_stats(total_size, status_codes):
+    print(f"Total file size: {total_size}")
+    for code in sorted(status_codes.keys()):
+        print(f"{code}: {status_codes[code]}")
+
+def parse_line(line):
+    parts = line.split()
+    ip_address = parts[0]
+    status_code = int(parts[3])
+    file_size = int(parts[4])
+    return ip_address, status_code, file_size
+
+total_size = 0
+status_codes = defaultdict(int)
+count = 0
 
 try:
     for line in sys.stdin:
-        tokens = line.split()
-        if len(tokens) >= 5:
-            status_tally[tokens[-2]] += 1
-            file_size += int(tokens[-1])
-            i += 1
-
-    print("File size: {:d}".format(file_size))
-    for key, value in sorted(status_tally.items()):
-        if value:
-            print("{:s}: {:d}".format(key, value))
-
+        ip_address, status_code, file_size = parse_line(line)
+        total_size += file_size
+        status_codes[status_code] += 1
+        count += 1
+        if count % 10 == 0:
+            print_stats(total_size, status_codes)
 except KeyboardInterrupt:
-    print("File size: {:d}".format(file_size))
-    for key, value in sorted(status_tally.items()):
-        if value:
-            print("{:s}: {:d}".format(key, value)))
+    print_stats(total_size, status_codes)
+
 
