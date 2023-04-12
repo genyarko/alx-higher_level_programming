@@ -4,40 +4,29 @@ reads stdin line by line and computes metrics
 """
 
 import sys
-from collections import defaultdict
+import signal
 
-# initialize the required variables
-total_size = 0
-status_counts = defaultdict(int)
+total_file_size = 0
+status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 line_count = 0
 
-# process the input lines
+def print_metrics():
+    print(f"Total file size: {total_file_size}")
+    for code, count in sorted(status_codes.items()):
+        if count > 0:
+            print(f"{code}: {count}")
+
+def signal_handler(sig, frame):
+    print_metrics()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 for line in sys.stdin:
-    try:
-        # parse the line using the provided format
-        ip, _, date, request, status, size = line.split(' ')
-        if request != 'GET /projects/260 HTTP/1.1':
-            continue
-        status = int(status)
-        size = int(size)
-        
-        # update the variables
-        total_size += size
-        status_counts[status] += 1
-        line_count += 1
-        
-        # print the statistics after every 10 lines
-        if line_count % 10 == 0:
-            print('Total file size:', total_size)
-            for status_code in sorted(status_counts.keys()):
-                print(status_code, ':', status_counts[status_code])
-                
-    except KeyboardInterrupt:
-        # handle keyboard interruption (CTRL + C)
-        print('Total file size:', total_size)
-        for status_code in sorted(status_counts.keys()):
-            print(status_code, ':', status_counts[status_code])
-        break
-
-
+    ip, _, _, status_code, file_size = line.split()
+    total_file_size += int(file_size)
+    status_codes[int(status_code)] += 1
+    line_count += 1
+    if line_count % 10 == 0:
+        print_metrics()
 
