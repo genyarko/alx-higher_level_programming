@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-
+"""
+a script that reads stdin line by line and computes metrics
+"""
 import sys
 
 def print_metrics(total_file_size, status_codes):
