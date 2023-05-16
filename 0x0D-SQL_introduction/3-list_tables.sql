@@ -1,4 +1,2 @@
-# Script: List Tables in a Database
-# Description: This script lists all the tables of a specified database in the MySQL server.
-
+-- Lists all tables of a database.
 SHOW TABLES;
