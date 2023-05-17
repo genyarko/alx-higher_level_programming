@@ -1,6 +1,6 @@
--- Create user_0d_1 if it does not exist
-CREATE USER IF NOT EXISTS user_0d_1@localhost IDENTIFIED BY 'user_0d_1_pwd';
+-- List privileges for user_0d_1
+SHOW GRANTS FOR 'user_0d_1'@'localhost';
 
--- Grant all privileges to user_0d_1
-GRANT ALL ON *.* TO user_0d_1@localhost
+-- List privileges for user_0d_2
+SHOW GRANTS FOR 'user_0d_2'@'localhost';
 
