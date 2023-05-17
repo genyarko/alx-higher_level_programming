@@ -1,10 +1,8 @@
--- Use the hbtn_0d_tvshows database
-USE hbtn_0d_tvshows;
-
 -- List shows without a genre linked
-SELECT s.title, g.genre_id
-FROM tv_shows AS s
-LEFT JOIN tv_show_genres AS g ON s.id = g.show_id
-WHERE g.genre_id IS NULL
-ORDER BY s.title ASC, g.genre_id ASC;
+SELECT s.`title`, g.`genre_id`
+  FROM `tv_shows` AS s
+       LEFT JOIN `tv_show_genres` AS g
+       ON s.`id` = g.`show_id`
+       WHERE g.`genre_id` IS NULL
+ ORDER BY s.`title`, g.`genre_id`;
 
