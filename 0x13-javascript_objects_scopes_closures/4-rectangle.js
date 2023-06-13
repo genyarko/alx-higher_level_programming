@@ -1,11 +1,9 @@
 #!/usr/bin/node
-
 class Rectangle {
   constructor(w, h) {
     if (w <= 0 || h <= 0 || !Number.isInteger(w) || !Number.isInteger(h)) {
       return {};
     }
-
     this.width = w;
     this.height = h;
   }
@@ -14,7 +12,6 @@ class Rectangle {
     if (Object.keys(this).length === 0) {
       return;
     }
-
     const row = 'X'.repeat(this.width);
     for (let i = 0; i < this.height; i++) {
       console.log(row);
@@ -25,7 +22,6 @@ class Rectangle {
     if (Object.keys(this).length === 0) {
       return;
     }
-
     [this.width, this.height] = [this.height, this.width];
   }
 
@@ -33,7 +29,6 @@ class Rectangle {
     if (Object.keys(this).length === 0) {
       return;
     }
-
     this.width *= 2;
     this.height *= 2;
   }
