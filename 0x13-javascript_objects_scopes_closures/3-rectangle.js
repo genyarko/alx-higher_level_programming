@@ -1,20 +1,19 @@
 #!/usr/bin/node
 class Rectangle {
-  constructor(w, h) {
-    if (w <= 0 || h <= 0 || !Number.isInteger(w) || !Number.isInteger(h)) {
-      return {};
+  constructor (w, h) {
+    if ((w > 0) && (h > 0)) {
+      this.width = w;
+      this.height = h;
     }
-    this.width = w;
-    this.height = h;
   }
 
-  print() {
-    if (Object.keys(this).length === 0) {
-      return;
-    }
-    const row = 'X'.repeat(this.width);
+  print () {
     for (let i = 0; i < this.height; i++) {
-      console.log(row);
+      let s = '';
+      for (let j = 0; j < this.width; j++) {
+        s += 'X';
+      }
+      console.log(s);
     }
   }
 }
