@@ -1,27 +1,20 @@
 #!/usr/bin/python3
 """
-Script that lists all states from the database hbtn_0e_0_usa.
+This script lists all states from the database hbtn_0e_0_usa
 """
-
 import sys
 import MySQLdb
 
 if __name__ == "__main__":
-    # Database connection configuration
+    # Database connection information
     username = sys.argv[1]
     password = sys.argv[2]
     database = sys.argv[3]
 
-    # Connect to the MySQL server
-    db = MySQLdb.connect(
-        host="localhost",
-        port=3306,
-        user=username,
-        passwd=password,
-        db=database
-    )
+    # Connect to MySQL server
+    db = MySQLdb.connect(host="localhost", port=3306, user=username, passwd=password, db=database)
 
-    # Create a cursor object to execute SQL queries
+    # Create a cursor object to interact with the database
     cursor = db.cursor()
 
     # Execute the query to retrieve all states
@@ -30,7 +23,7 @@ if __name__ == "__main__":
     # Fetch all the rows returned by the query
     rows = cursor.fetchall()
 
-    # Display the results
+    # Print the results
     for row in rows:
         print(row)
 
