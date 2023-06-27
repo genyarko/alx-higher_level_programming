@@ -1,4 +1,3 @@
 #!/bin/bash
-# This script takes a URL as an argument, sends a request to that URL using curl,
-# and displays the size of the response body in bytes.
+# Get the byte size of the HTTP response header for a given URL.
 curl -s "$1" | wc -c
