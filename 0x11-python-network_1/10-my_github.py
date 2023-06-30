@@ -1,17 +1,25 @@
 #!/usr/bin/python3
-
-import requests
+"""Displays the user ID using GitHub API and Basic Authentication.
+Usage: ./github_id.py <username> <personal_access_token>
+"""
 import sys
+import requests
 
-username = sys.argv[1]
-token = sys.argv[2]
 
-url = 'https://api.github.com/user'
+if __name__ == "__main__":
+    username = sys.argv[1]
+    access_token = sys.argv[2]
 
-response = requests.get(url, auth=(username, token))
+    url = "https://api.github.com/user"
+    headers = {
+        "Accept": "application/vnd.github.v3+json",
+    }
+    auth = (username, access_token)
 
-if response.status_code == 200:
-    user_info = response.json()
-    print("Your user id is:", user_info['id'])
-else:
-    print("Failed to retrieve user information. Status code:", response.status_code)
+    response = requests.get(url, headers=headers, auth=auth)
+    if response.status_code == 200:
+        data = response.json()
+        user_id = data["id"]
+        print(f"User ID: {user_id}")
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
