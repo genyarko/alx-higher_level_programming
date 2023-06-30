@@ -1,11 +1,25 @@
 #!/usr/bin/python3
 
-import urllib.request
 import sys
+import urllib.request
 
-url = sys.argv[1]
+def fetch_x_request_id(url):
+    """
+    Fetches the value of the X-Request-Id variable from the header of a response to the given URL.
+    
+    Args:
+        url (str): The URL to send the request to.
+    
+    Returns:
+        str: The value of the X-Request-Id variable.
+    """
+    request = urllib.request.Request(url)
+    with urllib.request.urlopen(request) as response:
+        x_request_id = response.getheader("X-Request-Id")
+        return x_request_id
 
-with urllib.request.urlopen(url) as response:
-    header = response.getheader('X-Request-Id')
+if __name__ == "__main__":
+    url = sys.argv[1]
 
-print(header)
+    x_request_id = fetch_x_request_id(url)
+    print(x_request_id)
